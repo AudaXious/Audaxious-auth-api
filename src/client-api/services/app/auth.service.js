@@ -5,7 +5,6 @@ import {
   ErrUserNotFound,
   ErrInvalidPassword,
   ErrInvalidOTP,
-  ErrInvalidEmail,
 } from "../../../errors/index.js";
 
 import { generateToken } from "../security/token.service.js";
