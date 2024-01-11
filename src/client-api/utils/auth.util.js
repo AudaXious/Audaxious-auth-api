@@ -20,7 +20,7 @@ export const generateAndSendOTP = async (email) => {
   const otp = _generateOTP();
   await sendToMail({
     email: email,
-    subject: "Reset Your Password",
+    subject: "Use this OTP code",
     message: `<h4>Hello. Please use this 6-digits code: ${otp} </h4>`,
   });
   return otp;

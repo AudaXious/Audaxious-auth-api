@@ -1,5 +1,9 @@
 import User from "../../../database/models/user/user.js";
-import { hashPassword , comparePassword, generateAndSendOTP} from "../../utils/auth.util.js";
+import {
+  hashPassword,
+  comparePassword,
+  generateAndSendOTP,
+} from "../../utils/auth.util.js";
 import {
   ErrEmailAlreadyExists,
   ErrUserNotFound,
@@ -24,13 +28,12 @@ const createUserAccountService = async (userReq) => {
   const hp = await hashPassword(password);
 
   const otp = await generateAndSendOTP(email);
-  
+
   const newUser = await User.create({
     ...userReq,
     password: hp,
-    otpCode : otp,
+    otpCode: otp,
   });
-  
 
   return newUser;
 };
@@ -40,8 +43,8 @@ const createUserAccountService = async (userReq) => {
  * @param (email, password) : string
  * @returns   user & token object
  */
-const loginUserAccountService = async (email,password) => {
-  const findUser = await User.findOne({ where: { email: email }  });
+const loginUserAccountService = async (email, password) => {
+  const findUser = await User.findOne({ email: email });
   if (!findUser) throw ErrUserNotFound;
 
   const passwordCompare = await comparePassword(password, findUser.password);
@@ -53,8 +56,7 @@ const loginUserAccountService = async (email,password) => {
 
   const token = await generateToken(payload);
 
-  const user = findUser.getSanitizedData();
-  return { user, token };
+  return { findUser, token };
 };
 
 /**
@@ -62,50 +64,49 @@ const loginUserAccountService = async (email,password) => {
  * @param (otp) : string
  * @returns   true
  */
-const verifyUserOtpService = async (otp)=>{
-  const user = await User.findOne({where : {otpCode : otp}});
-  if(!user) throw ErrInvalidOTP;
-  await user.update({ isVerified: true, otpCode: null });
+const verifyUserOtpService = async (otp) => {
+  const user = await User.findOne({ otpCode: otp });
+  if (!user) throw ErrInvalidOTP;
+  await user.updateOne({ isVerified: true, otpCode: null });
   return user.uuid;
-}
+};
 
 /**
  * @description  Fetches a user in the database using email, and sends otp to the email.
  * @param (email) : string
  * @returns   User Id(uuid)
  */
-const forgotPasswordService = async (email)=>{
-  const user = await User.findOne({where : {email : email}});
-  if(!user) throw ErrUserNotFound;
+const forgotPasswordService = async (email) => {
+  const user = await User.findOne({ email: email });
+  if (!user) throw ErrUserNotFound;
   const otp = await generateAndSendOTP(email);
-  await user.update({otpCode : otp});
+  await user.updateOne({ otpCode: otp });
   return user.uuid;
-}
+};
 
 /**
  * @description  Fetches a user in the database using email, and sends otp to the email.
  * @param (email) : string
  * @returns   User Id(uuid)
  */
-const changePasswordService = async (userId, password) =>{
-  const user = await User.findOne({where : {uuid : userId}});
-  if(!user) throw ErrUserNotFound;
+const changePasswordService = async (userId, password) => {
+  const user = await User.findOne({ uuid: userId });
+  if (!user) throw ErrUserNotFound;
   const hp = await hashPassword(password);
-  await user.update({password : hp , otpCode :null});
+  await user.updateOne({ password: hp, otpCode: null });
   return;
-}
+};
 
-const socialAuthLoginService = async (userObj )=>{
+const socialAuthLoginService = async (userObj) => {
   let findUser;
-  findUser = await User.findOne({where:{ email : userObj.email }});
+  findUser = await User.findOne({ email: userObj.email });
 
-  if(!findUser){
-   findUser = await User.create({
-     email: userObj.email,
-     fullName: `${userObj.firstName} ${userObj.lastName}`,
-     social_id : userObj.id,
+  if (!findUser) {
+    findUser = await User.create({
+      email: userObj.email,
+      fullName: `${userObj.firstName} ${userObj.lastName}`,
+      social_id: userObj.id,
     });
-
   }
   const payload = {
     uuid: findUser.uuid,
@@ -113,8 +114,8 @@ const socialAuthLoginService = async (userObj )=>{
 
   const token = await generateToken(payload);
 
-  return {token , user : findUser.email}
-}
+  return { token, user: findUser.email };
+};
 
 export const AuthService = {
   createUserAccountService,
@@ -122,5 +123,5 @@ export const AuthService = {
   verifyUserOtpService,
   forgotPasswordService,
   changePasswordService,
-  socialAuthLoginService
+  socialAuthLoginService,
 };

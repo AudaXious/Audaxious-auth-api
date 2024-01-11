@@ -1,16 +1,10 @@
-import sequelize from "./database.js";
+import mongoose from "mongoose";
 
 export const connectToDatabase = async () => {
   try {
-    
-        //Testing database connection
-        await sequelize.authenticate();
-         console.log('Connection has been established successfully.');
+    await mongoose.connect(process.env.MONGODB_URI ?? "");
 
-        //
-        await sequelize.sync();
-        console.log('Database synchronized.');
-
+    console.log("MongoDB connection successful!");
   } catch (error) {
     console.log("Failed to connect to Database: ", error);
     process.exit(1);

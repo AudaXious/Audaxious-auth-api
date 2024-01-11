@@ -1,119 +1,71 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../database.js";
+import { Schema, model } from "mongoose";
+import { v4 as uuidV4 } from "uuid";
 
-const User = sequelize.define(
-  "user",
+const userSchema = new Schema(
   {
     uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true,
+      type: String,
+      required: true,
+      default: () => uuidV4(),
       unique: true,
     },
-    social_id :{
-      type : DataTypes.STRING,
-      allowNull : true,
-      defaultValue : null,
+    social_id: {
+      type: String,
+      unique : true,
     },
     fullName: {
-      allowNull: false,
-      type: DataTypes.STRING,
+      type: String,
+      required: true,
     },
     email: {
-      allowNull: false,
-      type: DataTypes.STRING,
-    },
-    address: {
-      allowNull: true,
-      type: DataTypes.STRING,
-    },
-    phoneNumber: {
-      allowNull: false,
-      type: DataTypes.STRING,
-      defaultValue : "",
-    },
-    password: {
-      allowNull: false,
-      type: DataTypes.STRING,
-      defaultValue : "",
-    },
-    otpCode: {
-      allowNull: true,
-      type: DataTypes.STRING,
+      type: String,
+      required: true,
       unique: true,
     },
+    address: {
+      type: String,
+      required: false,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    otpCode: {
+      type: String,
+      required: true,
+      default: "",
+    },
     points: {
-      allowNull: true,
-      type: DataTypes.STRING,
-      defaultValue: "0",
+      type: String,
+      required: true,
+      default: "0",
     },
     religion: {
-      allowNull: true,
-      type: DataTypes.STRING,
+      type: String,
     },
     gender: {
-      allowNull: true,
-      type: DataTypes.STRING,
+      type: String,
     },
-    employmentInfo: {
-      type: DataTypes.JSONB,
-      allowNull: true,
-      validate: {
-        isValidEmploymentInfo(value) {
-          if (value !== undefined) {
-            // Check if value is an object
-            if (typeof value !== "object") {
-              throw new Error("Invalid employmentInfo format");
-            }
-
-            // Check if the object contains only the desired keys
-            const allowedKeys = [
-              "employmentStatus",
-              "profession",
-              "professionalLevel",
-              "otherNames",
-              "email",
-            ];
-            const actualKeys = Object.keys(value);
-
-            if (!allowedKeys.every((key) => actualKeys.includes(key))) {
-              const invalidKeys = actualKeys.filter(
-                (key) => !allowedKeys.includes(key)
-              );
-              throw new Error(
-                `Invalid employmentInfo keys: ${invalidKeys.join(", ")}`
-              );
-            }
-          }
-        },
-      },
-    },
+    employmentInfo: String,
     location: {
-      allowNull: true,
-      type: DataTypes.JSONB,
-      defaultValue: {},
+      type: String,
     },
-    avatarUrl: {
-      allowNull: true,
-      type: DataTypes.STRING,
-    },
+    avatarUrl: String,
     isVerified: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      type: Boolean,
+      default: false,
     },
   },
   {
     timestamps: true,
-      }
+  }
 );
 
-//custom method to remove password & otp fields when called
-User.prototype.getSanitizedData = function () {
-  const user = this.toJSON();
-  delete user.password;
-  delete user.otpCode;
-  return user;
-};
+const User = model("Users", userSchema);
 
 export default User;
