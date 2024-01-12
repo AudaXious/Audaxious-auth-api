@@ -14,7 +14,6 @@ const userSchema = new Schema(
     },
     fullName: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -27,8 +26,6 @@ const userSchema = new Schema(
     },
     phoneNumber: {
       type: String,
-      required: true,
-      default: "",
     },
     password: {
       type: String,
@@ -58,6 +55,14 @@ const userSchema = new Schema(
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    userInfo: {
+      type: {
+        role: String,
+        usage: String,
+        companyName: String,
+        productName : String,
+      },
     },
   },
   {

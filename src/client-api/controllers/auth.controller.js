@@ -53,11 +53,12 @@ export const loginUserAccount = async (req, res) => {
  */
 export const verifyUserOtp = async (req, res) => {
   try {
-    const {otp} = req.params;
-    const userId = await AuthService.verifyUserOtpService(otp)
+    const {email, otp} = req.body;
+    const userId = await AuthService.verifyUserOtpService(otp, email)
     res.status(200).json({
       success: true,
       message: `Otp verified`,
+      userId,
     });
     return;
   } catch (error) {
@@ -66,7 +67,6 @@ export const verifyUserOtp = async (req, res) => {
     return res.status(result.code).json({
       success: false,
       error: result,
-      userId
     });
   }
 };
@@ -97,10 +97,10 @@ export const forgotPassword = async (req, res) =>{
 
 export const changePassword = async(req, res) =>{
   try {
-    const {password} = req.body;
+    const {password, otp} = req.body;
     const {userId} = req.params;
 
-    await AuthService.changePasswordService(userId, password)
+    await AuthService.changePasswordService(userId, password, otp)
     res.status(200).json({
       success: true,
       message: 'Password change successful',

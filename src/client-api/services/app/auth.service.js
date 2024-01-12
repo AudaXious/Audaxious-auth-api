@@ -69,8 +69,8 @@ const loginUserAccountService = async (email, password) => {
  * @param (otp) : string
  * @returns   true
  */
-const verifyUserOtpService = async (otp) => {
-  const user = await User.findOne({ otpCode: otp });
+const verifyUserOtpService = async (otp, email) => {
+  const user = await User.findOne({ email : email, otpCode: otp });
   if (!user) throw ErrInvalidOTP;
   await user.updateOne({ isVerified: true, otpCode: null });
   return user.uuid;
@@ -97,8 +97,8 @@ const forgotPasswordService = async (email) => {
  * @param (email) : string
  * @returns   User Id(uuid)
  */
-const changePasswordService = async (userId, password) => {
-  const user = await User.findOne({ uuid: userId });
+const changePasswordService = async (userId, password, otp) => {
+  const user = await User.findOne({ uuid: userId, otpCode : otp });
   if (!user) throw ErrUserNotFound;
   const hp = await hashPassword(password);
   await user.updateOne({ password: hp, otpCode: null });

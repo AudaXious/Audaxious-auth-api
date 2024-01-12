@@ -5,9 +5,7 @@ const passwordValidationRegex =
 
 export const createUserAccountValidator = joi
   .object({
-    fullName: joi.string().required(),
     email: joi.string().email().required(),
-    phoneNumber: joi.string().required(),
     password: joi
       .string()
       .min(8)
@@ -24,6 +22,10 @@ export const loginUserAccountValidator = joi.object({
   email: joi.string().email().required(),
   password: joi.string().min(8).max(32).required(),
 });
+export const OTPVerificationValidator = joi.object({
+  email: joi.string().email().required(),
+  otp: joi.string().min(6).required(),
+});
 
 export const forgotPasswordValidator = joi.object({
   email: joi.string().email().required(),
@@ -31,6 +33,7 @@ export const forgotPasswordValidator = joi.object({
 
 export const changePasswordValidator = joi
   .object({
+    otp :joi.string().required(),
     password: joi
       .string()
       .min(8)

@@ -12,6 +12,7 @@ import {
   createUserAccountValidator,
   forgotPasswordValidator,
   loginUserAccountValidator,
+  OTPVerificationValidator,
 } from "../middlewares/validators/auth.validators.js";
 
 const routes = Router();
@@ -29,7 +30,7 @@ routes.post(
 );
 
 //
-routes.get("/verify/:otp", verifyUserOtp);
+routes.post("/verify",validateRequest(OTPVerificationValidator), verifyUserOtp);
 
 //
 routes.post("/forgot-password", validateRequest(forgotPasswordValidator),forgotPassword);
