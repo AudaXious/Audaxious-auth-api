@@ -20,6 +20,7 @@ export const ErrForumNotFound = new Error("Forum not found");
 
 //401
 export const ErrUnauthorized = new Error("User not authorized");
+export const ErrAccountNotVerified = new Error("Account not verified");
 
 
 //500
@@ -39,6 +40,7 @@ export const getErrorMessage = (error) => {
             break;
         
         case ErrUnauthorized:
+        case ErrAccountNotVerified:
             code = 401;
             break;
 

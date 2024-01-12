@@ -10,6 +10,7 @@ import {
   ErrUserNotFound,
   ErrInvalidPassword,
   ErrInvalidOTP,
+  ErrAccountNotVerified
 } from "../../../errors/index.js";
 
 import { generateToken } from "../security/token.service.js";
@@ -48,6 +49,8 @@ const createUserAccountService = async (userReq) => {
 const loginUserAccountService = async (email, password) => {
   const findUser = await User.findOne({ email: email });
   if (!findUser) throw ErrUserNotFound;
+
+  if(findUser.isVerified === false) throw ErrAccountNotVerified;
 
   const passwordCompare = await comparePassword(password, findUser.password);
   if (!passwordCompare) throw ErrInvalidPassword;
