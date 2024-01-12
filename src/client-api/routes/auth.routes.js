@@ -36,5 +36,5 @@ routes.post("/verify",validateRequest(OTPVerificationValidator), verifyUserOtp);
 routes.post("/forgot-password", validateRequest(forgotPasswordValidator),forgotPassword);
 
 //
-routes.patch("/change-password/:userId",validateRequest(changePasswordValidator), changePassword);
+routes.patch("/change-password",validateRequest(changePasswordValidator), changePassword);
 export default routes;

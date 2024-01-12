@@ -33,6 +33,7 @@ export const forgotPasswordValidator = joi.object({
 
 export const changePasswordValidator = joi
   .object({
+    userId : joi.string().required(),
     otp :joi.string().required(),
     password: joi
       .string()

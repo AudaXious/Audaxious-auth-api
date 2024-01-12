@@ -97,8 +97,7 @@ export const forgotPassword = async (req, res) =>{
 
 export const changePassword = async(req, res) =>{
   try {
-    const {password, otp} = req.body;
-    const {userId} = req.params;
+    const {password, otp, userId} = req.body;
 
     await AuthService.changePasswordService(userId, password, otp)
     res.status(200).json({
