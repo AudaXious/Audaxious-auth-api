@@ -2,12 +2,14 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 
 export const InitializePassport = (clientID, clientSecret) => {
+  const host = process.env.HOST_ADDRESS;
+  
   passport.use(
     new GoogleStrategy(
       {
         clientID: clientID,
         clientSecret: clientSecret,
-        callbackURL: "http://localhost:5000/api/v1/google/callback",
+        callbackURL: `${host}/google/callback`,
         passReqToCallback: true,
       },
       async function (request, accessToken, refreshToken, profile, cb) {

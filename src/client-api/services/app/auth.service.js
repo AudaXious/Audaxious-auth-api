@@ -2,6 +2,7 @@ import User from "../../../database/models/user/user.js";
 import {
   hashPassword,
   comparePassword,
+  generateOTP,
   generateAndSendOTP,
 } from "../../utils/auth.util.js";
 import {
@@ -21,13 +22,13 @@ import { generateToken } from "../security/token.service.js";
 const createUserAccountService = async (userReq) => {
   const { email, password } = userReq;
 
-  const user = await User.findOne({ where: { email: email } });
+  const user = await User.findOne({ email: email  });
 
   if (user) throw ErrEmailAlreadyExists;
 
   const hp = await hashPassword(password);
 
-  const otp = await generateAndSendOTP(email);
+  const otp = generateOTP();
 
   const newUser = await User.create({
     ...userReq,
@@ -35,6 +36,7 @@ const createUserAccountService = async (userReq) => {
     otpCode: otp,
   });
 
+  await generateAndSendOTP({ email, otp, flag: "verify" });
   return newUser;
 };
 
@@ -79,7 +81,10 @@ const verifyUserOtpService = async (otp) => {
 const forgotPasswordService = async (email) => {
   const user = await User.findOne({ email: email });
   if (!user) throw ErrUserNotFound;
-  const otp = await generateAndSendOTP(email);
+
+  const otp = generateOTP();
+
+  await generateAndSendOTP({ email, otp, flag: "reset" });
   await user.updateOne({ otpCode: otp });
   return user.uuid;
 };

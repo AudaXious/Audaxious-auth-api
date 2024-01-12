@@ -11,7 +11,6 @@ const userSchema = new Schema(
     },
     social_id: {
       type: String,
-      unique : true,
     },
     fullName: {
       type: String,

@@ -11,17 +11,27 @@ export const hashPassword = async function (password) {
   return newPassword;
 };
 
-const _generateOTP = () => {
+export const generateOTP = () => {
   const code = Math.floor(Math.random() * 1000000); // 6-digit code
   return code.toString();
 };
 
-export const generateAndSendOTP = async (email) => {
-  const otp = _generateOTP();
+export const generateAndSendOTP = async ({ email, otp, flag }) => {
+  let body = {
+    subject: "Verify your account",
+    message: `<h4>Hello. Please use this 6-digits code verify your account: ${otp} </h4>`,
+  };
+
+  if (flag === "reset") {
+    body = {
+      subject: "Reset your password",
+      message: `<h4>Hello. Please use this 6-digits code to reset your password: ${otp} </h4>`,
+    };
+  }
   await sendToMail({
     email: email,
-    subject: "Use this OTP code",
-    message: `<h4>Hello. Please use this 6-digits code: ${otp} </h4>`,
+    subject: body.subject,
+    message: body.message,
   });
   return otp;
 };
