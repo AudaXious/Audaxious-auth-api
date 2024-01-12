@@ -61,7 +61,7 @@ const userSchema = new Schema(
         role: String,
         usage: [String],
         companyName: String,
-        productName : String,
+        mediaNetwork : String,
       },
     },
   },
@@ -71,10 +71,5 @@ const userSchema = new Schema(
 );
 
 const User = model("Users", userSchema);
-
-User.updateMany(
-  { 'userInfo.usage': { $exists: true, $not: { $type: 'array' } } },
-  { $set: { 'userInfo.usage': ['$userInfo.usage'] } },
-);
 
 export default User;
