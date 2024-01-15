@@ -61,7 +61,7 @@ const userSchema = new Schema(
         role: String,
         usage: [String],
         companyName: String,
-        mediaNetwork : String,
+        mediaNetwork : [String],
       },
     },
   },

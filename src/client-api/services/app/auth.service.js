@@ -87,8 +87,8 @@ const forgotPasswordService = async (email) => {
 
   const otp = generateOTP();
 
-  await generateAndSendOTP({ email, otp, flag: "reset" });
   await user.updateOne({ otpCode: otp });
+  await generateAndSendOTP({ email, otp, flag: "reset" });
   return user.uuid;
 };
 
