@@ -29,12 +29,9 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     otpCode: {
       type: String,
-      required: true,
-      default: "",
     },
     points: {
       type: String,
