@@ -5,6 +5,4 @@ export const updateUserInformationValidator = Joi.object({
     usage : Joi.array().required(),
     companyName : Joi.string().required(),
     mediaNetwork : Joi.array().required(),
-    userId : Joi.string().required(),
-
 })

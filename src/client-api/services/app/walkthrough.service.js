@@ -1,8 +1,8 @@
 import User from "../../../database/models/user/user.js";
 import { ErrUserNotFound } from "../../../errors/index.js";
 
-const updateUserInformationService = async(userReq)=>{
-    const {role, usage, companyName, mediaNetwork, userId }=  userReq;
+const updateUserInformationService = async(userReq, userId)=>{
+    const {role, usage, companyName, mediaNetwork}=  userReq;
     const user = User.findOne({uuid : userId});
     if (!user) throw ErrUserNotFound;
 
