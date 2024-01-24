@@ -8,10 +8,11 @@ import { getErrorMessage } from "../../errors/index.js";
 export const createUserAccount = async (req, res) => {
   try {
     const userReq = req.body;
-    await AuthService.createUserAccountService(userReq);
+    const user = await AuthService.createUserAccountService(userReq);
     res.status(201).json({
       success: true,
       message: "Account created",
+      ...user
     });
     return;
   } catch (error) {

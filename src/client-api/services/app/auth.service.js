@@ -37,8 +37,15 @@ const createUserAccountService = async (userReq) => {
     otpCode: otp,
   });
 
+  const payload = {
+    uuid: newUser.uuid,
+  };
+
   await generateAndSendOTP({ email, otp, flag: "verify" });
-  return newUser;
+
+  const token = await generateToken(payload);
+
+  return {user :newUser, token};
 };
 
 /**

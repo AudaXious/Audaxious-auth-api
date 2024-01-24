@@ -11,8 +11,12 @@ routes.get(
 
 routes.get(
   "/google/callback",
-  passport.authenticate("google", { session: false }),
-  socialAuthController
+  passport.authenticate("google", {
+    successRedirect: "https://www.audaxious.com/dashboard",
+  })
 );
+
+//
+routes.get("/login/success", socialAuthController);
 
 export default routes;

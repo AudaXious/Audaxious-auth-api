@@ -4,15 +4,27 @@ import cors from "cors";
 import { err404NotFound } from "./errors/middlewares/error.middleware.js";
 import clientRoutes from "./client-api/client.js";
 import { InitializePassport } from "./client-api/middlewares/social-auth/auth.social.js";
+import passport from "passport";
+import session from "express-session";
 
 const app = express();
 
+app.use(
+    session({
+      secret: 'your-secret-key',
+      resave: false,
+      saveUninitialized: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+  );
+  
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-
+app.use(passport.initialize())
+app.use(passport.session());
 
 
 app.get("/", async (_, res)=>{
