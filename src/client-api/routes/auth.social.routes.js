@@ -3,6 +3,7 @@ import passport from "passport";
 import { socialAuthController } from "../controllers/auth.social.controller.js";
 
 const routes = Router();
+const CLIENT_ROUTE = process.env.CLIENT_ROUTE || "http://localhost:8080/dashboard"
 
 routes.get(
   "/auth/google",
@@ -12,7 +13,7 @@ routes.get(
 routes.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: "https://www.audaxious.com/dashboard",
+    successRedirect: CLIENT_ROUTE,
   })
 );
 
