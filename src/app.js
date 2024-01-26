@@ -20,7 +20,10 @@ app.use(
   
 app.options("*", cors());
 app.use(cors({
+  origin: 'https://www.audaxious.com',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
 }));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
