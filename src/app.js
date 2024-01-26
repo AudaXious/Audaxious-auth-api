@@ -20,7 +20,7 @@ app.use(
   
 app.options("*", cors());
 app.use(cors({
-  origin: 'https://www.audaxious.com',
+  origin: '*', //[/\.audaxious\.com$/, 'https://www.audaxious.com']
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
