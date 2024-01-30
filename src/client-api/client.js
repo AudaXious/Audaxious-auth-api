@@ -8,7 +8,7 @@ const app = express();
 
 app.use(socialAuthRoutes)
 app.use('/user', authRoutes)
-app.use(authorizeUser);
 app.use('/walkthrough', walkthroughRoutes)
+app.use(authorizeUser);
 
 export default app;

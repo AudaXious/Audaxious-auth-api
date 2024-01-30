@@ -5,6 +5,10 @@ import { updateUserInformationValidator } from "../middlewares/validators/walkth
 
 const routes = Router();
 
-routes.patch("/update", validateRequest(updateUserInformationValidator), updateUserInformation)
+routes.patch(
+  "/update/:userId",
+  validateRequest(updateUserInformationValidator),
+  updateUserInformation
+);
 
 export default routes;

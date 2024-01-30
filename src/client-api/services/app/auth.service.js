@@ -45,7 +45,7 @@ const createUserAccountService = async (userReq) => {
 
   const token = await generateToken(payload);
 
-  return {user :newUser, token};
+  return {user :newUser.uuid, token};
 };
 
 /**
