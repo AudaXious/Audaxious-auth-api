@@ -17,10 +17,11 @@ app.use(
       saveUninitialized: true,
       maxAge: 24 * 60 * 60 * 1000,
       proxy: true,
-      cookie:{
-        sameSite : 'None',
+      // cookie:{
+        // sameSite : 'None',
         // secure : true,
-      }
+        // httpOnly : true,
+      // }
     })
   );
   
