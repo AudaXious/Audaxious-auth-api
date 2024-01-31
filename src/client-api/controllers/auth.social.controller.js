@@ -5,8 +5,6 @@ import { getErrorMessage } from "../../errors/index.js";
 export const socialAuthController = async (req, res) => {
   try {
     const data = req.user;
-    console.log("==========",data);
-
     const userCred = await AuthService.socialAuthLoginService(data);
     return res.status(200).json({
       success : true,

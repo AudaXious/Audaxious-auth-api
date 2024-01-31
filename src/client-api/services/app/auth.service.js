@@ -115,7 +115,6 @@ const changePasswordService = async (userId, password, otp) => {
 
 const socialAuthLoginService = async (userObj) => {
   let findUser;
-  console.log("==========",userObj);
   if(!userObj) throw ErrUnauthorized;
   findUser = await User.findOne({ email: userObj.email });
 
