@@ -31,10 +31,12 @@ export const InitializePassport = (clientID, clientSecret) => {
   );
 
   passport.serializeUser((user, done) => {
+    console.log("====serializeUser======",user);
     done(null, user);
   });
   
   passport.deserializeUser((user, done) => {
+    console.log("====DeserializeUser======",user);
     done(null, user);
   });
 };
