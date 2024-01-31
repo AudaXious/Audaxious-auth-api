@@ -11,6 +11,7 @@ const app = express();
 
 app.use(
     session({
+      name : "audaxious-svr",
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: true,
