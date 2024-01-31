@@ -6,10 +6,12 @@ export const ErrInvalidOTP = new Error("Invalid OTP");
 
 
 //406
-export const ErrEmailAlreadyExists = new Error("Email already exists");
 export const ErrMissingKeyFields = new Error("Missing Key Fields");
 export const ErrMissingHeader = new Error("Missing request header")
 
+//409
+export const ErrEmailAlreadyExists = new Error("Email already exists");
+export const ErrResourceAlreadyExists = new Error("Resource already exists");
 
 //404
 export const ErrResourceNotFound = new Error("Resource not found");
@@ -52,10 +54,14 @@ export const getErrorMessage = (error) => {
             code = 404;
             break;
 
-        case ErrEmailAlreadyExists:
         case ErrMissingKeyFields:
         case ErrMissingHeader:
             code = 406;
+            break;
+
+        case ErrEmailAlreadyExists:
+        case ErrResourceAlreadyExists:
+            code = 409;
             break;
 
         case ErrInternalServer:

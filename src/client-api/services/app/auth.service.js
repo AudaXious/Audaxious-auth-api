@@ -10,7 +10,8 @@ import {
   ErrUserNotFound,
   ErrInvalidPassword,
   ErrInvalidOTP,
-  ErrAccountNotVerified
+  ErrAccountNotVerified,
+  ErrUnauthorized
 } from "../../../errors/index.js";
 
 import { generateToken } from "../security/token.service.js";
@@ -114,6 +115,7 @@ const changePasswordService = async (userId, password, otp) => {
 
 const socialAuthLoginService = async (userObj) => {
   let findUser;
+  if(!userObj) throw ErrUnauthorized;
   findUser = await User.findOne({ email: userObj.email });
 
   if (!findUser) {

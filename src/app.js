@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
     session({
-      secret: 'your-secret-key',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: true,
       maxAge: 24 * 60 * 60 * 1000,
@@ -20,9 +20,9 @@ app.use(
   
 app.options("*", cors());
 app.use(cors({
-  origin: '*', //[/\.audaxious\.com$/, 'https://www.audaxious.com']
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
+  // credentials: true,
   optionsSuccessStatus: 204,
 }));
 app.use(express.json());
