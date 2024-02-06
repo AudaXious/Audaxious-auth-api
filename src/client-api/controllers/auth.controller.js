@@ -20,7 +20,7 @@ export const createUserAccount = async (req, res) => {
     const result = getErrorMessage(error);
     return res.status(result.code).json({
       success: false,
-      error: result,
+      error: result.message,
     });
   }
 };
@@ -44,7 +44,7 @@ export const loginUserAccount = async (req, res) => {
     const result = getErrorMessage(error);
     return res.status(result.code).json({
       success: false,
-      error: result,
+      error: result.message,
     });
   }
 };
@@ -67,7 +67,7 @@ export const verifyUserOtp = async (req, res) => {
     const result = getErrorMessage(error);
     return res.status(result.code).json({
       success: false,
-      error: result,
+      error: result.message,
     });
   }
 };
@@ -91,7 +91,7 @@ export const forgotPassword = async (req, res) =>{
     const result = getErrorMessage(error);
     return res.status(result.code).json({
       success: false,
-      error: result,
+      error: result.message,
     });
   }
 }
@@ -111,7 +111,7 @@ export const changePassword = async(req, res) =>{
     const result = getErrorMessage(error);
     return res.status(result.code).json({
       success: false,
-      error: result,
+      error: result.message,
     });
   }
 }

@@ -12,7 +12,7 @@ export const hashPassword = async function (password) {
 };
 
 export const generateOTP = () => {
-  const code = Math.floor(Math.random() * 1000000); // 6-digit code
+  const code = Math.floor(100000 + Math.random() * 900000); // 6-digit code
   return code.toString();
 };
 
