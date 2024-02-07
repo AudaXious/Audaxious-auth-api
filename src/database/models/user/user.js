@@ -32,20 +32,9 @@ const userSchema = new Schema(
     },
     otpCode: {
       type: String,
-    },
-    points: {
-      type: String,
-      required: true,
-      default: "0",
-    },
-    religion: {
-      type: String,
+      index: { expires: "15m" },
     },
     gender: {
-      type: String,
-    },
-    employmentInfo: String,
-    location: {
       type: String,
     },
     avatarUrl: String,
@@ -66,6 +55,18 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", function (next) {
+  const fifteenMinutesInMs = 15 * 60 * 1000; // 15 minutes in milliseconds
+  if (this.isModified("otpCode") && this.otpCode !== null) {
+    setTimeout(() => {
+      this.otpCode = null;
+      next();
+    }, fifteenMinutesInMs);
+  } else {
+    next();
+  }
+});
 
 const User = model("Users", userSchema);
 

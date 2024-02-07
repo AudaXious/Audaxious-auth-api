@@ -80,7 +80,7 @@ const loginUserAccountService = async (email, password) => {
 const verifyUserOtpService = async (otp, email) => {
   const user = await User.findOne({ email : email, otpCode: otp });
   if (!user) throw ErrInvalidOTP;
-  await user.updateOne({ isVerified: true, otpCode: null });
+  await user.updateOne({ isVerified: true,});
   return user.uuid;
 };
 
@@ -91,7 +91,7 @@ const verifyUserOtpService = async (otp, email) => {
  */
 const forgotPasswordService = async (email) => {
   const user = await User.findOne({ email: email });
-  if (!user) throw ErrUserNotFound;
+  if (!user) throw ErrInvalidOTP;
 
   const otp = generateOTP();
 
@@ -107,7 +107,7 @@ const forgotPasswordService = async (email) => {
  */
 const changePasswordService = async (userId, password, otp) => {
   const user = await User.findOne({ uuid: userId, otpCode : otp });
-  if (!user) throw ErrUserNotFound;
+  if (!user) throw ErrInvalidOTP;
   const hp = await hashPassword(password);
   await user.updateOne({ password: hp, otpCode: null });
   return;
