@@ -30,10 +30,6 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
-    otpCode: {
-      type: String,
-      index: { expires: "15m" },
-    },
     gender: {
       type: String,
     },
@@ -55,18 +51,6 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
-
-userSchema.pre("save", function (next) {
-  const fifteenMinutesInMs = 15 * 60 * 1000; // 15 minutes in milliseconds
-  if (this.isModified("otpCode") && this.otpCode !== null) {
-    setTimeout(() => {
-      this.otpCode = null;
-      next();
-    }, fifteenMinutesInMs);
-  } else {
-    next();
-  }
-});
 
 const User = model("Users", userSchema);
 

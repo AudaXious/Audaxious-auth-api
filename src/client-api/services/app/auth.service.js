@@ -1,4 +1,5 @@
 import User from "../../../database/models/user/user.js";
+import OTP from "../../../database/models/otp/otp.js";
 import {
   hashPassword,
   comparePassword,
@@ -77,10 +78,29 @@ const loginUserAccountService = async (email, password) => {
  * @param (otp) : string
  * @returns   true
  */
-const verifyUserOtpService = async (otp, email) => {
-  const user = await User.findOne({ email : email, otpCode: otp });
-  if (!user) throw ErrInvalidOTP;
-  await user.updateOne({ isVerified: true,});
+const verifyUserOtpService = async (otp, email, type) => {
+  const user = await User.findOne({ email : email,});
+  if (!user) throw ErrUserNotFound;
+  let isOtp;
+
+  // to handle forgot password otp verification...
+  if(type === 'forgot'){
+    console.log("type==", type)
+    isOtp = await OTP.findOne({
+      user_uuid : user.uuid,
+      otpCode : otp,
+    })
+    if(!isOtp) throw ErrInvalidOTP;
+  }
+  //handle account verification only
+  else{
+    console.log("verificationn----", type)
+    await user.updateOne({ isVerified: true,});
+    isOtp = await OTP.findOneAndDelete({
+      otpCode : otp
+    });
+    if(!isOtp) throw ErrInvalidOTP;
+  }
   return user.uuid;
 };
 
@@ -91,11 +111,14 @@ const verifyUserOtpService = async (otp, email) => {
  */
 const forgotPasswordService = async (email) => {
   const user = await User.findOne({ email: email });
-  if (!user) throw ErrInvalidOTP;
+  if (!user) throw ErrUserNotFound;
 
   const otp = generateOTP();
 
-  await user.updateOne({ otpCode: otp });
+  await OTP.create({
+    user_uuid : user.uuid,
+    otpCode : otp,
+  })
   await generateAndSendOTP({ email, otp, flag: "reset" });
   return user.uuid;
 };
@@ -106,10 +129,17 @@ const forgotPasswordService = async (email) => {
  * @returns   User Id(uuid)
  */
 const changePasswordService = async (userId, password, otp) => {
-  const user = await User.findOne({ uuid: userId, otpCode : otp });
-  if (!user) throw ErrInvalidOTP;
+  const user = await User.findOne({ uuid: userId, });
+  if (!user) throw ErrUserNotFound;
+
+  const isOtp = await OTP.findOneAndDelete({
+    otpCode : otp
+  });
+
+  if(!isOtp) throw ErrInvalidOTP;
+
   const hp = await hashPassword(password);
-  await user.updateOne({ password: hp, otpCode: null });
+  await user.updateOne({ password: hp,});
   return;
 };
 

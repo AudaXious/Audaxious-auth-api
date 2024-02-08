@@ -55,7 +55,8 @@ export const loginUserAccount = async (req, res) => {
 export const verifyUserOtp = async (req, res) => {
   try {
     const {email, otp} = req.body;
-    const userId = await AuthService.verifyUserOtpService(otp, email)
+    const {type} = req.query;
+    const userId = await AuthService.verifyUserOtpService(otp, email, type)
     res.status(200).json({
       success: true,
       message: `Otp verified`,
