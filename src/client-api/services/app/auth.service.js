@@ -12,7 +12,7 @@ import {
   ErrInvalidPassword,
   ErrInvalidOTP,
   ErrAccountNotVerified,
-  ErrUnauthorized
+  ErrUnauthorized,
 } from "../../../errors/index.js";
 
 import { generateToken } from "../security/token.service.js";
@@ -25,7 +25,7 @@ import { generateToken } from "../security/token.service.js";
 const createUserAccountService = async (userReq) => {
   const { email, password } = userReq;
 
-  const user = await User.findOne({ email: email  });
+  const user = await User.findOne({ email: email });
 
   if (user) throw ErrEmailAlreadyExists;
 
@@ -47,7 +47,7 @@ const createUserAccountService = async (userReq) => {
 
   const token = await generateToken(payload);
 
-  return {user :newUser.uuid, token};
+  return { user: newUser.uuid, token };
 };
 
 /**
@@ -56,10 +56,12 @@ const createUserAccountService = async (userReq) => {
  * @returns   user & token object
  */
 const loginUserAccountService = async (email, password) => {
-  const findUser = await User.findOne({ email: email });
+  const findUser = await User.findOne({
+    email: { $regex: new RegExp(email, "i") },
+  });
   if (!findUser) throw ErrUserNotFound;
 
-  if(findUser.isVerified === false) throw ErrAccountNotVerified;
+  if (findUser.isVerified === false) throw ErrAccountNotVerified;
 
   const passwordCompare = await comparePassword(password, findUser.password);
   if (!passwordCompare) throw ErrInvalidPassword;
@@ -79,27 +81,25 @@ const loginUserAccountService = async (email, password) => {
  * @returns   true
  */
 const verifyUserOtpService = async (otp, email, type) => {
-  const user = await User.findOne({ email : email,});
+  const user = await User.findOne({ email: email });
   if (!user) throw ErrUserNotFound;
   let isOtp;
 
   // to handle forgot password otp verification...
-  if(type === 'forgot'){
-    console.log("type==", type)
+  if (type === "forgot") {
     isOtp = await OTP.findOne({
-      user_uuid : user.uuid,
-      otpCode : otp,
-    })
-    if(!isOtp) throw ErrInvalidOTP;
+      user_uuid: user.uuid,
+      otpCode: otp,
+    });
+    if (!isOtp) throw ErrInvalidOTP;
   }
   //handle account verification only
-  else{
-    console.log("verificationn----", type)
-    await user.updateOne({ isVerified: true,});
+  else {
+    await user.updateOne({ isVerified: true });
     isOtp = await OTP.findOneAndDelete({
-      otpCode : otp
+      otpCode: otp,
     });
-    if(!isOtp) throw ErrInvalidOTP;
+    if (!isOtp) throw ErrInvalidOTP;
   }
   return user.uuid;
 };
@@ -110,15 +110,17 @@ const verifyUserOtpService = async (otp, email, type) => {
  * @returns   User Id(uuid)
  */
 const forgotPasswordService = async (email) => {
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({
+    email: { $regex: new RegExp(email, "i") },
+  });
   if (!user) throw ErrUserNotFound;
 
   const otp = generateOTP();
 
   await OTP.create({
-    user_uuid : user.uuid,
-    otpCode : otp,
-  })
+    user_uuid: user.uuid,
+    otpCode: otp,
+  });
   await generateAndSendOTP({ email, otp, flag: "reset" });
   return user.uuid;
 };
@@ -129,24 +131,24 @@ const forgotPasswordService = async (email) => {
  * @returns   User Id(uuid)
  */
 const changePasswordService = async (userId, password, otp) => {
-  const user = await User.findOne({ uuid: userId, });
+  const user = await User.findOne({ uuid: userId });
   if (!user) throw ErrUserNotFound;
 
   const isOtp = await OTP.findOneAndDelete({
-    otpCode : otp
+    otpCode: otp,
   });
 
-  if(!isOtp) throw ErrInvalidOTP;
+  if (!isOtp) throw ErrInvalidOTP;
 
   const hp = await hashPassword(password);
-  await user.updateOne({ password: hp,});
+  await user.updateOne({ password: hp });
   return;
 };
 
 const socialAuthLoginService = async (userObj) => {
   let findUser;
-  console.log("==========",userObj);
-  if(!userObj) throw ErrUnauthorized;
+  console.log("==========", userObj);
+  if (!userObj) throw ErrUnauthorized;
   findUser = await User.findOne({ email: userObj.email });
 
   if (!findUser) {
