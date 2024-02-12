@@ -21,7 +21,6 @@ app.use(
         sameSite : 'None',
         secure : true,
         httpOnly : true,
-        domain : 'api.audaxious.com'
       }
     })
   );
