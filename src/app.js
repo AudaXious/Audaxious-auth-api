@@ -21,7 +21,7 @@ app.use(
         sameSite : 'None',
         secure : true,
         httpOnly : true,
-        domain : 'audaxious.com'
+        domain : '.audaxious.com'
       }
     })
   );
