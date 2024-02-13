@@ -4,7 +4,7 @@ import CONFIG from "../../../config/default.js";
 
 export const InitializePassport = (clientID, clientSecret) => {
   const host = CONFIG.HOST_ADDRESS;
-  
+  console.log("host here",host);
   passport.use(
     new GoogleStrategy(
       {
