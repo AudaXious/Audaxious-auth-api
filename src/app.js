@@ -6,8 +6,16 @@ import clientRoutes from "./client-api/client.js";
 import { InitializePassport } from "./client-api/middlewares/social-auth/auth.social.js";
 import passport from "passport";
 import session from "express-session";
+import { default as connectMongoDBSession} from 'connect-mongodb-session';
+import CONFIG from "./config/default.js"
 
 const app = express();
+
+const MongoDBStore = connectMongoDBSession(session)
+const sessionStore = new MongoDBStore({
+  uri: CONFIG.MONGODB_URI,
+  collection: 'sessions',
+})
 
 app.use(
     session({
@@ -16,11 +24,12 @@ app.use(
       resave: false,
       saveUninitialized: true,
       maxAge: 24 * 60 * 60 * 1000,
-      proxy: true,
+      proxy: process.env.NODE_ENV === 'production' ? true : false,
+      store: sessionStore,
       cookie:{
         sameSite : 'None',
-        secure : true,
-        httpOnly : true,
+        secure : process.env.NODE_ENV === 'production' ? true : false,
+        // httpOnly : process.env.NODE_ENV === 'production' ? true : false,
       }
     })
   );
@@ -48,7 +57,7 @@ app.get("/", async (_, res)=>{
 })
 
 //Initialize passport middleware 
-InitializePassport(process.env.OAUTH_CLIENT_ID, process.env.OAUTH_CLIENT_SECRET);
+InitializePassport(CONFIG.OAUTH_CLIENT_ID, CONFIG.OAUTH_CLIENT_SECRET);
 
 app.use("/api/v1", clientRoutes);
 

@@ -1,8 +1,9 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
+import CONFIG from "../../../config/default.js";
 
 export const InitializePassport = (clientID, clientSecret) => {
-  const host = process.env.HOST_ADDRESS;
+  const host = CONFIG.HOST_ADDRESS;
   
   passport.use(
     new GoogleStrategy(
@@ -35,7 +36,7 @@ export const InitializePassport = (clientID, clientSecret) => {
     done(null, user);
   });
   
-  passport.deserializeUser((user, done) => {
+  passport.deserializeUser(async(user, done) => {
     console.log("====DeserializeUser======",user);
     done(null, user);
   });
