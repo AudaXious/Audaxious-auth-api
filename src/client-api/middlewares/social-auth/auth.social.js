@@ -3,14 +3,14 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import CONFIG from "../../../config/default.js";
 
 export const InitializePassport = (clientID, clientSecret) => {
-  const host = CONFIG.HOST_ADDRESS;
-  console.log("host here",host);
+  const callback_host = CONFIG.HOST_ADDRESS;
+  console.log("host here",callback_host);
   passport.use(
     new GoogleStrategy(
       {
         clientID: clientID,
         clientSecret: clientSecret,
-        callbackURL: `${host}/google/callback`,
+        callbackURL: `${callback_host}/google/callback`,
         passReqToCallback: true,
       },
       async function (request, accessToken, refreshToken, profile, cb) {
