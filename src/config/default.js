@@ -22,6 +22,7 @@ const CONFIG = {
     HOST_ADDRESS : process.env.HOST_ADDRESS,
     OAUTH_CLIENT_SECRET: process.env.OAUTH_CLIENT_SECRET,
     SESSION_SECRET: process.env.SESSION_SECRET,
+    CLIENT_ROUTE : process.env.CLIENT_ROUTE,
   },
   production: {
     MONGODB_URI : process.env.MONGODB_URI_PROD,
@@ -36,7 +37,8 @@ const CONFIG = {
     OAUTH_CLIENT_ID: process.env.OAUTH_CLIENT_ID_PROD,
     OAUTH_CLIENT_SECRET: process.env.OAUTH_CLIENT_SECRET_PROD,
     SESSION_SECRET: process.env.SESSION_SECRET,
-    HOST_ADDRESS: process.env.HOST_ADDRESS_PROD
+    HOST_ADDRESS: process.env.HOST_ADDRESS_PROD,
+    CLIENT_ROUTE: process.env.CLIENT_ROUTE_PROD,
   },
 };
 
